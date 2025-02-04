@@ -1,1 +1,9 @@
-69420
+3 pages:
+il y aura une navbar en bas qui permet de naviguer entre les pages
+Home:
+    contient la liste complète de tous les films
+Search:
+    permet de chercher un film. il faut préciser où l'on cherche (acteur, directeur, nom du film, année de sortie, ...)
+    et taper ce que l'on cherche
+Favoris:
+    contient la liste de tous les favoris
