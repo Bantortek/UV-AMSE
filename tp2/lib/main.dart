@@ -60,6 +60,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => Ex2Page()),
                   );
                 },
+              ),
+              ListTile(
+                title: Text("Ex 4"),
+                subtitle: Text("Display a Tile as a Cropped Imagee"),
+                trailing: Icon(Icons.play_arrow),                 
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Ex4Page()),
+                  );
+                },
+              ),
+              ListTile(
+                title: Text("Ex 5"),
+                subtitle: Text("Generate a grid"),
+                trailing: Icon(Icons.play_arrow),                 
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Ex5Page()),
+                  );
+                },
               )
             ])
     );
