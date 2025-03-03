@@ -1,5 +1,32 @@
 import 'package:flutter/material.dart';
 
+class ImageTile {
+  String imagePath;
+  int size;
+  int i;
+
+
+  ImageTile({required this.imagePath, required this.size, required this.i});
+
+  Widget croppedImageTile() {
+    double x = (i%size)/size;
+    double y = (i/size).ceilToDouble()/size;
+    
+    return FittedBox(
+      fit: BoxFit.fill,
+      child: ClipRect(
+        child: Align(
+          alignment: FractionalOffset(x, y),
+          widthFactor: 1/size,
+          heightFactor: 1/size,
+          child: Image(image: AssetImage(imagePath)),
+        ),
+      ),
+    );
+  }
+}
+
+
 class Ex5Page extends StatefulWidget {
   const Ex5Page({super.key});
 
@@ -10,22 +37,27 @@ class Ex5Page extends StatefulWidget {
 class _Ex5PageState extends State<Ex5Page> {
   int grid_size = 2;
   
+  Widget createTileWidgetFrom(ImageTile tile) {
+    return InkWell(
+      child: tile.croppedImageTile(),
+      onTap: () {
+        print("tapped on tile");
+      },
+    );
+  }
   
   GridView gridMaker(int size){
     List<Widget> tiles = [];
     for(var i = 0; i<size*size; i++){
-      tiles.add(Container(
-            padding: const EdgeInsets.all(8),
-            color: Colors.green[100],
-            child: Text("Case $i"),
-          ),);
+      ImageTile tile = ImageTile(imagePath: 'assets/test_img.jpg', size:size, i:i);
+      tiles.add(createTileWidgetFrom(tile));
     }
     GridView grid = GridView.count(
               shrinkWrap: true,
               primary: false,
               padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
+              crossAxisSpacing: 1,
+              mainAxisSpacing: 1,
               crossAxisCount: size,
               children: tiles
             );
