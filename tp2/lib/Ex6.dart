@@ -9,9 +9,10 @@ math.Random random = math.Random();
 
 class ColorTile {
   Color color = Colors.blue;
-  int index = -1;
+  int position = -1;
+  int value = -1;
 
-  ColorTile(this.color, this.index);
+  ColorTile(this.color, this.position, this.value);
   ColorTile.randomColor() {
     color = Color.fromARGB(
         255, random.nextInt(255), random.nextInt(255), random.nextInt(255));
@@ -35,7 +36,9 @@ class TileWidget extends StatelessWidget {
   Widget coloredBox() {
     return Container(
         color: tile.color,
-        child: Text(tile.index.toString(),style: TextStyle(fontSize: 25)),
+        child: Column( children:[
+          Text(tile.value.toString(),style: TextStyle(fontSize: 25)),
+        ])
         );
   }
 }
@@ -57,6 +60,7 @@ class PositionedTilesState extends State<Ex6Page> {
     empty_space = math.Random().nextInt(grid_size*grid_size);
     tilesMaker(grid_size);
   }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,37 +81,36 @@ class PositionedTilesState extends State<Ex6Page> {
   void tilesMaker(int size){
     tiles = [];
     for(var i = 0; i<size*size; i++){
-      TileWidget tile;
+      Widget tile;
       if(i == empty_space){
-        tile = TileWidget(ColorTile(Colors.white,i));
+        tile = TileWidget(ColorTile(Colors.white,i,i));
       }else{
-        tile = TileWidget(ColorTile(Colors.grey,i));
-      }
-      double x = (empty_space % size)/(size-1);
-      double y = (empty_space ~/ size)/(size-1);
-      Widget TouchableTile = InkWell(
-      child: tile,
-      onTap: () {
-          print("yeah");
-          if((x != 0 && tile.tile.index == empty_space -1)||(x != size-1 && tile.tile.index == empty_space +1)
-           ||(y != 0 && tile.tile.index == empty_space - size)||(y != size-1 && tile.tile.index == empty_space + size)){
-            print("yellow");
-            setState(() {
-              var tempty = tiles[empty_space];
-              var tempindex = tiles[tile.tile.index];
-              tiles.removeAt(tile.tile.index);
-              tiles.insert(tile.tile.index, tempty);
-              tiles.removeAt(empty_space);
-              tiles.insert(empty_space, tempindex);
-              
-              //tiles.insert(tile.tile.index, temp);
-              empty_space = tile.tile.index;
-            });
-          }
+        TileWidget pre_tile = TileWidget(ColorTile(Colors.grey,i,i));
+        tile = InkWell(
+          child: pre_tile,
+          onTap: () {
+              int x = (empty_space % size);
+              int y = (empty_space ~/ size);
+              if((x != 0 && pre_tile.tile.position == empty_space -1)||(x != size-1 && pre_tile.tile.position == empty_space +1)
+              ||(y != 0 && pre_tile.tile.position == empty_space - size)||(y != size-1 && pre_tile.tile.position == empty_space + size)){
+                setState(() {
+                  Widget tempty = tiles[empty_space];
+                  Widget tempindex = tiles[pre_tile.tile.position];
+                  tiles.removeAt(pre_tile.tile.position);
+                  tiles.insert(pre_tile.tile.position, tempty);
+                  tiles.removeAt(empty_space);
+                  tiles.insert(empty_space, tempindex);
+                  
+                  int temp_index = pre_tile.tile.position;
+                  pre_tile.tile.position = empty_space;
+                  empty_space = temp_index;
+                });
+              }
 
-        }
-      );
-      tiles.add(TouchableTile);
+            }
+        );
+      }
+      tiles.add(tile);
     }
   }
 }
