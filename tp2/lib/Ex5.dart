@@ -9,9 +9,8 @@ class ImageTile {
   ImageTile({required this.imagePath, required this.size, required this.i});
 
   Widget croppedImageTile() {
-    double x = (i%size)/size;
-    double y = (i/size).ceilToDouble()/size;
-    
+    double x = (i % size)/(size-1);
+    double y = (i ~/ size)/(size-1);
     return FittedBox(
       fit: BoxFit.fill,
       child: ClipRect(
