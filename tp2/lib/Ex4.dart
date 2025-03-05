@@ -29,10 +29,7 @@ class Ex4Page extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Display a Tile as a Cropped Image'),
-        centerTitle: true,
-      ),
+      appBar: AppBar(title: const Text('Display a Tile as a Cropped Image'),backgroundColor: Colors.greenAccent,),
       body: Center(
           child: Column(children: [
         SizedBox(
