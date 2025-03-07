@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ImageTile {
+class ImageTileEx5 {
   String imagePath;
   int size;
   int i;
 
 
-  ImageTile({required this.imagePath, required this.size, required this.i});
+  ImageTileEx5({required this.imagePath, required this.size, required this.i});
 
   Widget croppedImageTile() {
     double x = (i % size)/(size-1);
@@ -36,7 +36,7 @@ class Ex5Page extends StatefulWidget {
 class _Ex5PageState extends State<Ex5Page> {
   int grid_size = 2;
   
-  Widget createTileWidgetFrom(ImageTile tile) {
+  Widget createTileWidgetFrom(ImageTileEx5 tile) {
     return InkWell(
       child: tile.croppedImageTile(),
       onTap: () {
@@ -48,7 +48,7 @@ class _Ex5PageState extends State<Ex5Page> {
   GridView gridMaker(int size){
     List<Widget> tiles = [];
     for(var i = 0; i<size*size; i++){
-      ImageTile tile = ImageTile(imagePath: 'assets/test_img.jpg', size:size, i:i);
+      ImageTileEx5 tile = ImageTileEx5(imagePath: 'assets/test_img.jpg', size:size, i:i);
       tiles.add(createTileWidgetFrom(tile));
     }
     GridView grid = GridView.count(

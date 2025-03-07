@@ -93,6 +93,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     MaterialPageRoute(builder: (context) => Ex6Page()),
                   );
                 },
+              ),
+              ListTile(
+                title: Text("Ex 7"),
+                subtitle: Text("Taquin"),
+                trailing: Icon(Icons.play_arrow),                 
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => Ex7Page()),
+                  );
+                },
               )
             ])
     );
