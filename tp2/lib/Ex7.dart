@@ -55,9 +55,13 @@ class TileWidget extends StatelessWidget {
   }
 
   Widget coloredBox() {
+
     return Container(
         child: tile is ImageTile 
-              ? tile.croppedImageTile()
+              ? Stack(
+                alignment: Alignment.bottomRight,
+                children: [tile.croppedImageTile(),Text("", style: TextStyle(color: Colors.black, fontSize: 20),)],
+              )
               : Text("")
         
         );
@@ -78,8 +82,11 @@ class PositionedTilesState extends State<Ex7Page> {
   int grid_size = 2;
   int empty_space = -1;
   bool onBuild = true;
+  int img_num = 1;
+  int mvt_count = 0;
   PositionedTilesState(){
     empty_space = math.Random().nextInt(grid_size*grid_size);
+    img_num = math.Random().nextInt(5)+1;
     tilesMaker(grid_size);
   }
   
@@ -94,15 +101,34 @@ class PositionedTilesState extends State<Ex7Page> {
     return Scaffold(
       appBar: AppBar(title: const Text('Taquin'),backgroundColor: Colors.greenAccent,),
       body:Column(children: [
-        GridView.count(
-              shrinkWrap: true,
-              primary: false,
-              padding: const EdgeInsets.all(20),
-              crossAxisSpacing: 1,
-              mainAxisSpacing: 1,
-              crossAxisCount: grid_size,
-              children: [...tiles]
-            ),
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: Padding(padding: EdgeInsets.symmetric(horizontal: 20),
+            child: Text("Nombre de movements réalisés : ${mvt_count.toString()}", style: TextStyle(fontSize: 15),),),
+        ),
+        Stack(alignment: Alignment.center,
+              children: [GridView.count(
+                          shrinkWrap: true,
+                          primary: false,
+                          padding: const EdgeInsets.all(20),
+                          crossAxisSpacing: 1,
+                          mainAxisSpacing: 1,
+                          crossAxisCount: grid_size,
+                          children: [...tiles]
+                        ),
+                        Text("YOU WIN", style: TextStyle(color: areTilesInOrder() 
+                                                ? Colors.yellow
+                                                : Colors.transparent,
+                                                fontSize: 50,
+                                                backgroundColor: areTilesInOrder() 
+                                                ? Colors.red
+                                                : Colors.transparent,
+                        ),)
+        ],),
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: Padding(padding: EdgeInsets.symmetric(horizontal: 20),child: Text("Taille du Taquin :", style: TextStyle(fontSize: 15),),),
+        ),
         Slider(
               min: 2,
               max: 10,
@@ -118,10 +144,24 @@ class PositionedTilesState extends State<Ex7Page> {
                 });
               }
             ),
-        Text("yay", style: TextStyle(color: areTilesInOrder() 
-                                    ? Colors.black
-                                    : Colors.white
-        ),)
+        Container(
+          alignment: Alignment.bottomLeft,
+          child: Padding(padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ElevatedButton(
+              child: Text("changer l'image"),
+              onPressed: () {
+                setState(() {
+                  img_num++;
+                  if(img_num>5){
+                    img_num = 1;
+                  }
+                  tilesMaker(grid_size);
+                  tilesShaker();
+                });
+              },
+            ),
+          ),
+        ),
       ]),
     );
   }
@@ -134,7 +174,7 @@ class PositionedTilesState extends State<Ex7Page> {
       if(i == empty_space){
         tile = TileWidget(ColorTile(Colors.white,i,i));
       }else{
-        TileWidget pre_tile = TileWidget(ImageTile(imagePath: 'assets/test_img.jpg', size:size, position: i, value: i));
+        TileWidget pre_tile = TileWidget(ImageTile(imagePath: 'assets/image_${img_num.toString()}.png', size:size, position: i, value: i));
         tile = InkWell(
           child: pre_tile,
           onTap: () {
@@ -153,6 +193,7 @@ class PositionedTilesState extends State<Ex7Page> {
                   int temp_index = pre_tile.tile.position;
                   pre_tile.tile.position = empty_space;
                   empty_space = temp_index;
+                  mvt_count +=1;
                 });
               }
 
@@ -164,7 +205,7 @@ class PositionedTilesState extends State<Ex7Page> {
   }
 
 void tilesShaker() {
-  int iter = grid_size*grid_size*5;
+  int iter = grid_size*grid_size*10;
   while(iter>0){
     bool axe = math.Random().nextBool(); //True = x, False = y
     bool side = math.Random().nextBool();//True = devant, False = derrière
@@ -196,7 +237,7 @@ void tilesShaker() {
         ((tiles[toMoveIndex] as TileWidget).tile as ColorTile).position = toMoveIndex;
 
         empty_space = toMoveIndex;
-        
+        mvt_count = 0;
       });
       iter = iter -1;
     }
